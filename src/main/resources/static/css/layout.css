@@ -1,0 +1,105 @@
+@charset "UTF-8";
+
+/* 전체 레이아웃 
+--------------------------- */
+#main{
+	width: 1024px;
+	margin: 0 auto;
+	font-size: 10pt;
+	font-family: "맑은 고딕";
+}
+#main_header{
+	margin-bottom: 10px;
+	padding: 0 10ox 0 0;
+}
+#main_body{
+	padding: 5px 5px 30px 5px;
+	min-height: 500px;
+}
+#main_footer{
+	background-color: yellow;
+}
+a:link{
+	text-decoration: none;
+	color: #000000;
+}
+a:visited{
+	text-decoration: none;
+	color: #000000;
+}
+a:hover{						/* 마우스 올려놨을때 색깔 변하게하기 */
+	text-decoration: none;
+	color: #999999;
+}
+
+/* 좌측 메뉴 레이아웃(Admin,MyPage) 
+--------------------------- */
+
+/* 페이지 기본 레이아웃 
+--------------------------- */
+.page-main{
+	width:98%;
+	margin:0 auto;/*중앙 정렬*/
+}
+.page-one{
+	width: 600px;
+	margin: 0 auto;
+}
+
+/* 공통 메세지 및 버튼 
+--------------------------- */
+.result-display{
+	width:400px;
+	height:200px;
+	margin:100px auto;/*상하 좌우*/
+	border:1px solid #000;/*테두리*/
+	display: flex;/*하위 요소를 수직으로 쌓을 수 있는 공간을 만듬*/
+  	align-items: center;/*세로 정렬*/
+  	justify-content: center;/*가로 정렬*/
+}
+.align-center{
+	text-align:center;
+}
+.align-right{
+	text-align:right;
+}
+/*목록*/
+table{
+	width:100%;
+	margin-top:5px;
+	border:1px solid #000;
+	border-collapse:collapse;
+}
+table td, table th{
+	border:1px solid #000;
+	padding:5px;
+}
+/*등록, 수정 폼*/
+form{
+	width:500px;
+	margin:0 auto;
+	border:1px solid #000;
+	padding:10px 10px 10px 30px;
+}
+ul{
+	list-style:none;
+}
+label{
+	width:100px;
+	float:left;/*태그를 왼쪽으로 정렬*/
+}
+.error-color{
+	color:red;
+}
+
+
+
+
+
+
+
+
+
+
+
+
