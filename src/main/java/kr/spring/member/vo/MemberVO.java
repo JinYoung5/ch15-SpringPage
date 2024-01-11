@@ -39,9 +39,9 @@ public class MemberVO {
 	@Size(min=5,max=5)
 	private String zipcode;
 	@NotBlank
-	private String adrress1;
+	private String address1;
 	@NotEmpty
-	private String adrress2;
+	private String address2;
 	private byte[] photo;					//MyBatis 에서는 multipartfile 로 명시 안됨. byte[] 배열로 처리
 	private String Photo_name;
 	private Date reg_date;
