@@ -1,5 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="kr.spring.member.dao.MemberMapper">
+	<!-- 회원가입 상세 -->
+	<insert id="insertMember_detail" parameterType="memberVO">
+		INSERT INTO spmember_detail(
+			mem_num,
+			name,
+			passwd,
+			phone,
+			email,
+			zipcode,
+			address1,
+			address2)
+		VALUES (
+			#{mem_num},
+			#{name},
+			#{passwd},
+			#{phone},
+			#{email},
+			#{zipcode},
+			#{address1},
+			#{address2})
+	</insert>
 	
+	<!-- 아이디 중복 체크 및 로그인 체크 -->
+	<select id="selectCheckMember" parameterType="string">
+		SELECT
+			id,
+			auth,
+			nick_name,
+			au_id,
+			passwd,
+			email
+		FROM spmember
+		LEFT OUTER JOIN spmember_detail
+		USING(mem_num)
+		WHERE id=#{id}
+		
+			
+	</select>
 </mapper>

@@ -117,6 +117,24 @@ button[type="submit"]{
 }
 /* 회원가입 등록, 수정 폼 
 --------------------------- */
+#member_register{
+	width: 800px;
+}
+#member_register ul, #member_modify ul{
+	padding-left: 120px;
+}
+#member_register input[id="id"]{
+	width: 236px;
+}
+#member_register input[id="zipcode"], #member_modify input[id="zipcode"]{
+	width: 220px;
+}
+#member_modify{
+	width: 96%;
+}
+#member_delete input[id="id"], #member_delete input[id="passwd"]{
+	width: 240px;
+}
 
 /*목록*/
 table{
