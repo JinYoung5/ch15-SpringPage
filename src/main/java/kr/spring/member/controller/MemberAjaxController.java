@@ -36,7 +36,7 @@ public class MemberAjaxController {
 				mapAjax.put("result","notMatchPattern");
 			}else {
 				//패턴 일치하면서 아이디 미중복
-				mapAjax.put("result", "idNOtFound");
+				mapAjax.put("result", "idNotFound");
 			}
 		}
 		
