@@ -17,7 +17,7 @@
 		<div id="page_nav">
 			<tiles:insertAttribute name="nav" />
 		</div>
-		<div id="main_body">
+		<div id="page_body">
 			<tiles:insertAttribute name="body" />
 		</div>
 	</div>

@@ -6,6 +6,13 @@
 <div class="align-right">
 	<c:if test="${!empty user}">
 	<a href="${pageContext.request.contextPath}/member/myPage">MY페이지</a>
+	<img src="${pageContext.request.contextPath}/member/photoView" width="25" height="25" class="my-photo">
+	</c:if>
+	<c:if test="${!empty user && !empty user.nick_name}">
+	[<span class="user_name">${user.nick_name}</span>]
+	</c:if>
+	<c:if test="${!empty user && empty user.nick_name}">
+	[<span class="user_name">${user.id}</span>]
 	</c:if>
 	
 	<c:if test="${!empty user}">

@@ -28,8 +28,7 @@ public class MemberServiceImpl implements MemberService{
 
 	@Override
 	public MemberVO selelctMember(int mem_num) {
-		// TODO Auto-generated method stub
-		return null;
+		return memberMapper.selelctMember(mem_num);
 	}
 
 	@Override
@@ -48,5 +47,28 @@ public class MemberServiceImpl implements MemberService{
 	public void deleteMember(int mem_num) {
 		// TODO Auto-generated method stub
 		
+	}
+
+	@Override
+	public void updateAu_id(String au_id, int mem_num) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void selectAu_id(String au_id) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteAu_id(int mem_num) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void updateProfile(MemberVO member) {
+		memberMapper.updateProfile(member);
 	}
 }
