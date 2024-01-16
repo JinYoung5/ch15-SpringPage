@@ -4,6 +4,8 @@ import java.sql.Date;
 
 import javax.validation.constraints.NotBlank;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -20,6 +22,8 @@ public class BoardVO {
 	private int hit;
 	private Date reg_date;
 	private Date modify_date;
+	private MultipartFile upload;
+	private String filename;			//특정경로에 지정할때:String filename, 테이블에 저장할 때 byte형식(MemberVO)
 	private String ip;
 	private int mem_num;
 	

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+    <definition name="boardList" extends="main">
+    	<put-attribute name="title" value="게시판 목록" />
+    	<put-attribute name="body" value="/WEB-INF/views/board/boardList.jsp" />
+    </definition>
+    <definition name="boardWrite" extends="main">
+    	<put-attribute name="title" value="글쓰기" />
+    	<put-attribute name="body" value="/WEB-INF/views/board/boardWrite.jsp" />
+    </definition>
+    
+</tiles-definitions>
+
+

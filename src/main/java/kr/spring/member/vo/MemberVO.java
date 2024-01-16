@@ -42,7 +42,7 @@ public class MemberVO {
 	private String address1;
 	@NotEmpty
 	private String address2;
-	private byte[] photo;					//MyBatis 에서는 multipartfile 로 명시 안됨. byte[] 배열로 처리
+	private byte[] photo;					//MyBatis 에서는 multipartfile 로 명시 안됨. byte[] 배열로 처리  table에 저장할 때 byte형식
 	private String Photo_name;
 	private Date reg_date;
 	private Date modify_date;

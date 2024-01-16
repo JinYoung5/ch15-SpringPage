@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="kr.spring.board.dao.BoardMapper">
+	<!-- 게시판 글 등록 -->
+	<insert id="insertBoard" parameterType="boardVO">
+		INSERT INTO spboard(
+			board_num,
+			title,
+			content,
+			filename,
+			ip,
+			mem_num)
+		VALUES (
+			spboard_seq.nextval,
+			#{title},
+			#{content},
+			#{filename,jdbcType=VARCHAR},				<!-- filename이 명시되어있을 때, 필수적으로 넣지 않아도 될 때, 널이 들어가면 오류나기때문에 jdbcType=VARCHAR 표기해야됨 -->
+			#{ip},
+			#{mem_num})
+	</insert>
+	
+	<!-- sql 태그와 include 태그를 이용해 SQL문 재사용 -->
+	<sql id="boardSearch">		<!-- 반복하고 싶은 문을 sql작성 -->
+		<where>
+			<if test="keyword != null and keyword !=''">
+				<if test="keyfield == 1">
+					title LIKE '%' || #{keyword} || '%'
+				</if>
+				<if test="keyfield == 2">
+					id LIKE '%' || #{keyword} || '%' OR nick_name LIKE '%' || #{keyword} || '%'
+				</if>
+				<if test="keyfield == 3">
+					content LIKE '%' || #{keyword} || '%'
+				</if>
+				<if test="keyfield == 4">
+					title LIKE '%' || #{keyword} || '%' OR content LIKE '%' || #{keyword} || '%'
+				</if>
+			</if>
+		</where>
+	</sql>
+	
+	<sql id="boradOrder">		<!-- 정렬 -->
+		<if test="order ==1">
+			ORDER BY board_num DESC			<!-- 게시물 번호순 -->
+		</if>
+		<if test="order ==2">
+			ORDER BY hit DESC				<!-- 조회수순 -->
+		</if>
+		<if test="order ==3">
+			ORDER BY fav_cnt DESC			<!-- 좋아요순 -->
+		</if>
+		<if test="order ==4">
+			ORDER BY re_cnt DESC			<!-- 댓글순 -->
+		</if>
+	</sql>
+	<!-- 게시판 총개수/검색 개수 -->
+	<select id="selectRowCount" parameterType="map" resultType="integer">
+		SELECT
+			COUNT(*)
+		FROM spboard JOIN spmember USING(mem_num)
+		<include refid="boardSearch"></include>			<!-- 상황에 따라 동적으로 위쪽의 sql문 where절 읽어서 처리 -->
+	</select>
+	
+	<!-- 게시판 전체 목록/검색 목록 -->
+	<select id="selectList" parameterType="map" resultType="boardVO">
+		SELECT
+			*
+		FROM (SELECT
+				a.*,
+				rownum rnum
+			FROM (SELECT
+					*
+					FROM spboard JOIN spmember
+					USING(mem_num) 
+					<include refid="boardSearch"></include>
+					<include refid="boardOrder"></include>)a)
+		<![CDATA[
+		WHERE rnum >= #{start} AND rnum <= #{end}
+		]]>
+	</select>
+	
+</mapper>

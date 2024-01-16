@@ -17,7 +17,8 @@ public class AppConfig implements WebMvcConfigurer{
 		configurer.setDefinitions(
 				new String[] {
 						"/WEB-INF/tiles-def/main.xml",
-						"/WEB-INF/tiles-def/member.xml"
+						"/WEB-INF/tiles-def/member.xml",
+						"/WEB-INF/tiles-def/board.xml"
 						});	//여러개 만들수있어서 String 배열형태로 지정
 		configurer.setCheckRefresh(true);
 		
