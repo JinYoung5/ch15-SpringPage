@@ -14,6 +14,14 @@
     	<put-attribute name="title" value="글쓰기" />
     	<put-attribute name="body" value="/WEB-INF/views/board/boardWrite.jsp" />
     </definition>
+    <definition name="boardView" extends="main">
+    	<put-attribute name="title" value="글상세" />
+    	<put-attribute name="body" value="/WEB-INF/views/board/boardView.jsp" />
+    </definition>
+    <definition name="boardModify" extends="main">
+    	<put-attribute name="title" value="글수정" />
+    	<put-attribute name="body" value="/WEB-INF/views/board/boardModify.jsp" />
+    </definition>
     
 </tiles-definitions>
 

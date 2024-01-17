@@ -39,7 +39,7 @@
 		</where>
 	</sql>
 	
-	<sql id="boradOrder">		<!-- 정렬 -->
+	<sql id="boardOrder">		<!-- 정렬 -->
 		<if test="order ==1">
 			ORDER BY board_num DESC			<!-- 게시물 번호순 -->
 		</if>
@@ -69,14 +69,32 @@
 				a.*,
 				rownum rnum
 			FROM (SELECT
-					*
-					FROM spboard JOIN spmember
-					USING(mem_num) 
-					<include refid="boardSearch"></include>
-					<include refid="boardOrder"></include>)a)
+					board_num,							<!-- 검색페이지 내에서 html을 허용 하지 않기위해 sql문에서 설정해야됨 -->
+					<![CDATA[
+					REPLACE(REPLACE(title,'<','&lt;'),'>','&gt;') title,
+					]]>
+					hit,
+					reg_date,
+					mem_num,
+					id,
+					nick_name
+				FROM spboard JOIN spmember
+				USING(mem_num) 
+				<include refid="boardSearch"></include>
+				<include refid="boardOrder"></include>)a)
 		<![CDATA[
 		WHERE rnum >= #{start} AND rnum <= #{end}
 		]]>
+	</select>
+	
+	<!-- 글 상세 -->
+	<select id="selectBoard" parameterType="integer">
+		SELECT
+			*
+		FROM spboard
+		JOIN spmember USING(mem_num)
+		LEFT OUTER JOIN spmember_detail USING(mem_num)
+		WHERE board_num=#{board_num}
 	</select>
 	
 </mapper>

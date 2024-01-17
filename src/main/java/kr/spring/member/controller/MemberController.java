@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import kr.spring.member.service.MemberService;
 import kr.spring.member.vo.MemberVO;
@@ -175,7 +176,15 @@ public class MemberController {
 		return "imageView";
 	}
 	//프로필 사진 출력(회원번호 지정)
-	
+	@RequestMapping("/member/viewProfile")
+	public String getProfileByMem_num(@RequestParam int mem_num, HttpServletRequest request, Model model) {
+
+		MemberVO memberVO = memberService.selelctMember(mem_num);
+		
+		viewProfile(memberVO, request, model);
+		
+		return "imageView";
+	}
 	//프로필 사진 처리를 위한 공통 코드
 	public void viewProfile(MemberVO memberVO, HttpServletRequest request, Model model) {
 		if(memberVO == null || memberVO.getPhoto_name() == null) {

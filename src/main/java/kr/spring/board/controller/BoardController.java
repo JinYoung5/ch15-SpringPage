@@ -25,6 +25,7 @@ import kr.spring.board.vo.BoardVO;
 import kr.spring.member.vo.MemberVO;
 import kr.spring.util.FileUtil;
 import kr.spring.util.PageUtil;
+import kr.spring.util.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -91,8 +92,8 @@ public class BoardController {
 		int count = boardService.selectRowCount(map);
 		log.debug("<<count>> : " + count);
 		
-		//페이지 처리
-		PageUtil page = new PageUtil(keyfield, keyword, currentPage, count, 20,10,"list");
+		//페이지 처리																		//keyfield,keyword와 같이 "&order=" + order 명시
+		PageUtil page = new PageUtil(keyfield, keyword, currentPage, count, 20,10,"list","&order=" + order);
 		
 		List<BoardVO> list = null;
 		if(count > 0) {
@@ -110,6 +111,54 @@ public class BoardController {
 		mav.addObject("page", page.getPage());
 
 		return mav; 
-
+	}
+	
+	/*=================================
+	 *	게시판 글 상세 
+	 *=================================*/
+	@RequestMapping("/board/detail")
+	public ModelAndView process(@RequestParam int board_num) {
+		log.debug("<<게시판 글 상세 board_num>> : " + board_num);
+		
+		//해당 글의 조회수 증가
+		boardService.updateHit(board_num);
+		
+		BoardVO board = boardService.selectBoard(board_num);
+		//제목에 태그를 허용하지 않음
+		board.setTitle(StringUtil.useNoHtml(board.getTitle()));
+								//타일스 설정명,속성명,속성값
+		return new ModelAndView("boardView","board",board);
+	}
+	
+	/*=================================
+	 *	파일 다운로드 
+	 *=================================*/
+	@RequestMapping("/board/file")
+	public ModelAndView download(@RequestParam int board_num, HttpServletRequest request) {
+		BoardVO board = boardService.selectBoard(board_num);
+		
+		//파일을 절대경로에서 읽어들여 byte[]로 변환
+		byte[] downloadFile = FileUtil.getBytes(request.getServletContext().getRealPath("/upload") + "/" + board.getFilename());
+		
+		ModelAndView mav = new ModelAndView();
+		mav.setViewName("downloadView");
+		mav.addObject("downloadFile", downloadFile);
+		mav.addObject("filename", board.getFilename());
+		
+		return mav;
+	}
+	
+	/*=================================
+	 *	게시판 글 수정 
+	 *=================================*/
+	//수정 폼 호출
+	@GetMapping("/board/update")
+	public String formUpdate(@RequestParam int board_num, Model model) {
+		BoardVO boardVO = boardService.selectBoard(board_num);
+		
+		model.addAttribute("boardVO",boardVO);
+		
+			//definition 타입 설정명
+		return "boardModify";
 	}
 }
