@@ -41,16 +41,16 @@
 	
 	<sql id="boardOrder">		<!-- 정렬 -->
 		<if test="order ==1">
-			ORDER BY board_num DESC			<!-- 게시물 번호순 -->
+			ORDER BY board_num DESC					<!-- 게시물 번호순 -->
 		</if>
 		<if test="order ==2">
-			ORDER BY hit DESC				<!-- 조회수순 -->
+			ORDER BY hit DESC						<!-- 조회수순 -->
 		</if>
 		<if test="order ==3">
-			ORDER BY fav_cnt DESC			<!-- 좋아요순 -->
+			ORDER BY fav_cnt DESC NULLS LAST		<!-- 좋아요순 -->
 		</if>
 		<if test="order ==4">
-			ORDER BY re_cnt DESC			<!-- 댓글순 -->
+			ORDER BY re_cnt DESC NULLS LAST			<!-- 댓글순 -->
 		</if>
 	</sql>
 	<!-- 게시판 총개수/검색 개수 -->
@@ -77,9 +77,11 @@
 					reg_date,
 					mem_num,
 					id,
-					nick_name
-				FROM spboard JOIN spmember
-				USING(mem_num) 
+					nick_name,
+					fav_cnt								<!-- 좋아요 없으면 null이됨 nulls last를 위쪽 boardOrder에 명시-->
+				FROM spboard 
+				LEFT OUTER JOIN	(SELECT COUNT(*) fav_cnt, board_num FROM spboard_fav GROUP BY board_num) USING(board_num)	<!-- 누락된 것도 보여지기 위해 outer join -->
+				JOIN spmember USING(mem_num) 
 				<include refid="boardSearch"></include>
 				<include refid="boardOrder"></include>)a)
 		<![CDATA[
@@ -97,4 +99,16 @@
 		WHERE board_num=#{board_num}
 	</select>
 	
+	<!-- 글 수정 -->
+	<update id="updateBoard" parameterType="boardVO">
+		UPDATE spboard SET
+			<if test="filename != null">
+			filename=#{filename},
+			</if>
+			title=#{title},
+			content=#{content},
+			ip=#{ip},
+			modify_date=SYSDATE
+		WHERE board_num=#{board_num}
+	</update>
 </mapper>

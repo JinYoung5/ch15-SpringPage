@@ -7,6 +7,7 @@
 <meta charset="UTF-8">
 <title><tiles:getAsString name="title" /></title>
 <link rel="stylesheet" href="${pageContext.request.contextPath}/css/layout.css">
+<tiles:insertAttribute name="css" ignore="true" />			<%-- name="css" 를 넣을때 ignore="true"가 없으면 에러뜸 --%>
 </head>
 <body>
 <div id="main">

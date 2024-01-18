@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import kr.spring.board.dao.BoardMapper;
+import kr.spring.board.vo.BoardFavVO;
 import kr.spring.board.vo.BoardVO;
 
 @Service
@@ -43,19 +44,44 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public void updateBoard(BoardVO board) {
-		// TODO Auto-generated method stub
-		
+		boardMapper.updateBoard(board);
 	}
 
 	@Override
 	public void deleteBoard(int board_num) {
-		// TODO Auto-generated method stub
-		
+		//부모글 좋아요 삭제
+		boardMapper.deleteFavByBoardNum(board_num);
+		//부모글 삭제
+		boardMapper.deleteBoard(board_num);
 	}
 
 	@Override
 	public void deleteFile(int board_num) {
 		boardMapper.deleteFile(board_num);
+	}
+
+	@Override
+	public BoardFavVO selectFav(BoardFavVO fav) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int selectFavCount(int board_num) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	@Override
+	public void insertFav(BoardFavVO fav) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void deleteFav(BoardFavVO boardFav) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

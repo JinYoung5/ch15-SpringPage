@@ -4,6 +4,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <!-- 내용 시작 -->
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.6.0.min.js"></script>
+<script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/ckeditor.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/uploadAdapter.js"></script>
 <div class="page-main">
 	<h2>글 수정</h2>
 	<form:form action="update" modelAttribute="boardVO" id="update_form" enctype="multipart/form-data">
@@ -15,10 +18,28 @@
 				<form:input path="title"/>
 				<form:errors path="title" cssClass="error-color" />
 			</li>
+			<li><b>내용</b></li>
 			<li>
-				<form:label path="content">내용</form:label>
 				<form:textarea path="content"/>
 				<form:errors path="content" cssClass="error-color" />
+				<script>
+					function MyCustomUploadAdapterPlugin(editor){
+						editor.plugins.get('FileRepository').createUploadAdapter = (loader) => {
+						return new UploadAdapter(loader);
+						}
+					}
+					
+					ClassicEditor
+						.create(document.querySelector('#content'),{
+							extraPlugins:[MyCustomUploadAdapterPlugin]
+						})
+						.then(editor => {
+							window.editor = editor;
+						})
+						.catch(error => {
+							console.error(error);
+						});
+				</script>
 			</li>
 			<li>
 				<form:label path="upload">파일업로드</form:label>
