@@ -4,11 +4,13 @@ import java.util.List;
 import java.util.Map;
 
 import org.apache.ibatis.annotations.Delete;
+import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 import org.apache.ibatis.annotations.Update;
 
 import kr.spring.board.vo.BoardFavVO;
+import kr.spring.board.vo.BoardReplyVO;
 import kr.spring.board.vo.BoardVO;
 
 @Mapper
@@ -31,10 +33,21 @@ public interface BoardMapper {
 	public BoardFavVO selectFav(BoardFavVO fav);				//토글형태라 selectFav,selectFavcount 부분 같이
 	@Select("SELECT COUNT(*) FROM spboard_fav WHERE board_num=#{board_num}")
 	public int selectFavCount(int board_num);					//목록에도 좋아요 수 나타내기위해 JOIN ->xml에 명시했으니 xml로 이동
+	@Insert("INSERT INTO spboard_fav (board_num,mem_num) VALUES (#{board_num},#{mem_num})")
 	public void insertFav(BoardFavVO fav);						//insertFav,deleteFav 작업 같이
-	public void deleteFav(BoardFavVO boardFav);
+	@Delete("DELETE FROM spboard_fav WHERE board_num=#{board_num} AND mem_num=#{mem_num}")
+	public void deleteFav(BoardFavVO boardFav); 
 	@Delete("DELETE FROM spboard_fav WHERE board_num=#{board_num}")
-	public void deleteFavByBoardNum(int board_num);		//부모글 지울 떄 좋아요 지워주기위해 만듦
+	public void deleteFavByBoardNum(int board_num);				//부모글 지울 떄 좋아요 지워주기위해 만듦
 	//댓글
+	public List<BoardReplyVO> selectListReply(Map<String, Object> map);
+	public int selectRowCountReply(Map<String, Object> map);
+	public BoardReplyVO selectReply(int re_num);						//한건의 데이터 불러오기
+	public void insertReply(BoardReplyVO boardReply);					//등록
+	public void updateReply(BoardReplyVO boardReply);
+	public void deleteReply(int re_num);
+	//부모글 삭제시 댓글이 존재하면 부모글 삭제전 댓글 삭제
+	@Delete("DELETE FROM spboard_reply WHERE board_num=#{board_num}")
+	public void deleteReplyByBoardNum(int board_num);					//부모글 삭제할때 동작	
 	
 }

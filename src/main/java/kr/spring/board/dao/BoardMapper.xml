@@ -78,9 +78,11 @@
 					mem_num,
 					id,
 					nick_name,
+					re_cnt,
 					fav_cnt								<!-- 좋아요 없으면 null이됨 nulls last를 위쪽 boardOrder에 명시-->
-				FROM spboard 
-				LEFT OUTER JOIN	(SELECT COUNT(*) fav_cnt, board_num FROM spboard_fav GROUP BY board_num) USING(board_num)	<!-- 누락된 것도 보여지기 위해 outer join -->
+				FROM spboard 							<!-- (SELECT~ 인라인뷰형태) table 생성 -->
+				LEFT OUTER JOIN (SELECT COUNT (*) re_cnt, board_num FROM spboard_reply GROUP BY board_num) USING(board_num)
+				LEFT OUTER JOIN	(SELECT COUNT (*) fav_cnt, board_num FROM spboard_fav GROUP BY board_num) USING(board_num)	<!-- 누락된 것도 보여지기 위해 outer join -->
 				JOIN spmember USING(mem_num) 
 				<include refid="boardSearch"></include>
 				<include refid="boardOrder"></include>)a)
@@ -111,4 +113,20 @@
 			modify_date=SYSDATE
 		WHERE board_num=#{board_num}
 	</update>
+	
+	<!-- 댓글 등록 -->
+	<insert id="insertReply" parameterType="boardReplyVO">
+		INSERT INTO spboard_reply(
+			re_num,
+			re_content,
+			re_ip,
+			board_num,
+			mem_num)
+		VALUES(
+			spreply_seq.nextval,
+			#{re_content},
+			#{re_ip},
+			#{board_num}
+			#{mem_num})
+	</insert>
 </mapper>

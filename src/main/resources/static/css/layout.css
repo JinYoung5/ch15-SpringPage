@@ -124,8 +124,8 @@ input[type="text"],input[type="password"],input[type="email"]{
 input[type="checkbox"]{
 	margin: 11px 0 10px 0;
 }
-button[type="submit"]{
-	height: 31px;
+[type="submit"],[type="button"]{
+	height: 33px;
 }
 /* 회원가입 등록, 수정 폼 
 --------------------------- */
@@ -340,4 +340,91 @@ ul.detail-info li:last-child{
 }
 .detail-content img{
 	max-width: 940px;
+}
+#output_fav{
+	cursor: pointer;
+}
+#output_fcount{
+	width: 50px;
+	display: inline-block;
+}
+div#reply_div{
+	padding: 5px 10px 40px 10px;
+	margin-top: 10px;
+	background-color: #eeeeee;
+}
+form#re_form{
+	width: 650px;
+	border: none;
+}
+span.re-title{
+	color: #000;
+	font-size: 12pt;
+	line-height: 200%;
+}
+span.letter-count{
+	font-size: 10pt;
+	color: #999;
+}
+textarea.rep-content{
+	width: 90%;
+	height: 50px;
+	margin: 10px 10px;
+}
+div#re_first,div#mre_first{
+	float: left;
+	width: 70%;
+	padding-left: 15px;
+	margin-bottom: 10px;
+}
+div#loading{
+	width: 100px;
+	height: 50px;
+	/* 정중앙에 div를 배치하기 위한 설정 */
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	transform: translate(-50%,-50%);
+	/* 하위 요소를 수직으로 쌓을 수 있는 공간을 만듦 */
+	display: flex;
+	/* 세로정렬 */
+	align-items: center;
+	/* 가로정렬 */
+	justify-content: center;
+}
+div.paging-button{
+	text-align: right;
+}
+div#output{
+	clear: both;
+}
+form#mre_form{
+	border: none;
+	margin: 5px;
+}
+
+
+
+
+
+/*	따로 내가 추가
+--------------------------- */
+.container1{
+	width: 1250px;
+	max-width:none!important;
+}
+.footer1 p, a {
+	font-family: 'Nanum Gothic', sans-serif;
+	color: black;
+}
+
+.footer1 div {
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
+.bg-light img {
+	width: 250px;
+	float: left;
+	margin-right: 20px;
 }

@@ -3,9 +3,9 @@ package kr.spring.board.service;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.ibatis.annotations.Select;
 
 import kr.spring.board.vo.BoardFavVO;
+import kr.spring.board.vo.BoardReplyVO;
 import kr.spring.board.vo.BoardVO;
 
 public interface BoardService {
@@ -24,4 +24,10 @@ public interface BoardService {
 	public void insertFav(BoardFavVO fav);						//insertFav,deleteFav 작업 같이
 	public void deleteFav(BoardFavVO boardFav);
 	//댓글
+	public List<BoardReplyVO> selectListReply(Map<String, Object> map);
+	public int selectRowCountReply(Map<String, Object> map);
+	public BoardReplyVO selectReply(int re_num);						//한건의 데이터 불러오기
+	public void insertReply(BoardReplyVO boardReply);					//등록
+	public void updateReply(BoardReplyVO boardReply);
+	public void deleteReply(int re_num);
 }
