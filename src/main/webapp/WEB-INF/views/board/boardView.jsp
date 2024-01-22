@@ -6,6 +6,7 @@
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/jquery-3.6.0.min.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/videoAdapter.js"></script>
 <script type="text/javascript" src="${pageContext.request.contextPath}/js/board.fav.js"></script>
+<script type="text/javascript" src="${pageContext.request.contextPath}/js/board.reply.js"></script>
 <div class="page-main">
 	<h2>${board.title}</h2>
 	<ul class="detail-info">
@@ -47,10 +48,10 @@
 		${board.content}
 	</div>
 	<div>
-		<!-- 좋아요 -->
+		<%-- 좋아요 --%>
 		<img id="output_fav" data-num="${board.board_num}" src="${pageContext.request.contextPath}/images/fav01.gif" width="40">
 		<span id="output_fcount"></span>
-		<!-- 댓글수 -->
+		<%-- 댓글수 --%>
 		<span id="output_rcount"></span>
 	</div>
 	<hr size="1" width="100%">

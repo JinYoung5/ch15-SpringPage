@@ -126,7 +126,34 @@
 			spreply_seq.nextval,
 			#{re_content},
 			#{re_ip},
-			#{board_num}
+			#{board_num},
 			#{mem_num})
 	</insert>
+	
+	<!-- 댓글 목록 -->
+	<select id="selectListReply" parameterType="map" resultType="boardReplyVO">
+		SELECT
+			*
+		FROM (SELECT
+				a.*,
+				rownum rnum
+			FROM (SELECT
+					re_num,			<!-- 특수문자 ('<'가 들어가면 '&lt'넣어야되고, '>'가들어가면 '&gt'명시) 가 들어가서 <![CDATA]]>를 넣어줘야됨 -->
+					<![CDATA[
+					REPLACE(REPLACE(re_content,'<','&lt;'),'>','&gt;') re_content,
+					]]>
+					re_date,
+					re_mdate,
+					board_num,
+					mem_num,
+					id,
+					nick_name
+				FROM spboard_reply
+				JOIN spmember USING(mem_num)
+				WHERE board_num=#{board_num}
+				ORDER BY re_num DESC)a)
+		<![CDATA[
+		WHERE rnum >= #{start} AND rnum <= #{end}
+		]]>
+	</select>
 </mapper>

@@ -41,6 +41,7 @@ public interface BoardMapper {
 	public void deleteFavByBoardNum(int board_num);				//부모글 지울 떄 좋아요 지워주기위해 만듦
 	//댓글
 	public List<BoardReplyVO> selectListReply(Map<String, Object> map);
+	@Select("SELECT COUNT (*) FROM spboard_reply WHERE board_num=#{board_num}")
 	public int selectRowCountReply(Map<String, Object> map);
 	public BoardReplyVO selectReply(int re_num);						//한건의 데이터 불러오기
 	public void insertReply(BoardReplyVO boardReply);					//등록

@@ -64,4 +64,4 @@ create table spboard_reply(
 	constraint spboard_reply_fk1 foreign key (board_num) references spboard (board_num),
 	constraint spboard_reply_fk2 foreign key (mem_num) references spmember (mem_num)
 );
-create sequence sprely_seq;
+create sequence spreply_seq;
