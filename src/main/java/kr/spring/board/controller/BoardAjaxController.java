@@ -180,4 +180,65 @@ public class BoardAjaxController {
 		
 		return mapJson;
 	}
+	
+	
+	/*=======================
+	 * 댓글 수정
+	 *======================= */
+	@RequestMapping("/board/updateReply")
+	@ResponseBody
+	public Map<String, String> modifyReply(BoardReplyVO boardReplyVO, HttpSession session, HttpServletRequest request){		//Json방식으로 해야되니 map<,>
+		
+		log.debug("<<댓글 수정 BoardReplyVO>> : " + boardReplyVO);
+		
+		Map<String, String> mapJson = new HashMap<String, String>();
+		
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		BoardReplyVO db_reply = boardService.selectReply(boardReplyVO.getRe_num());
+		if(user == null) {
+			//로그인이 되지 않은 경우
+			mapJson.put("result", "logout");
+		}else if(user != null && user.getMem_num() == db_reply.getMem_num()) {
+			//로그인한 회원번호와 작성자 회원번호 일치
+			
+			//ip등록
+			boardReplyVO.setRe_ip(request.getRemoteAddr());
+			//댓글 수정
+			boardService.updateReply(boardReplyVO);
+			mapJson.put("result", "success");
+		}else {
+			//로그인한 회원번호와 작성자 회원번호 불일치
+			mapJson.put("result", "wrongAccess");
+		}
+		
+		return mapJson;
+	}
+	
+	
+	/*=======================
+	 * 댓글 삭제
+	 *======================= */
+	@RequestMapping("/board/deleteReply")
+	@ResponseBody			//map형태로 보내주면 json방식으로 자동 완성됨
+	public Map<String, String> deleteReply(@RequestParam int re_num, HttpSession session){
+		log.debug("<<댓글 삭제 re_num>> : " + re_num);
+		
+		Map<String, String> mapJson = new HashMap<String, String>();
+		
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		BoardReplyVO db_reply = boardService.selectReply(re_num);
+		if(user==null) {
+			//로그인이 되지 않은 경우
+			mapJson.put("result", "logout");
+		}else if(user != null && user.getMem_num() == db_reply.getMem_num()) {
+			//로그인한 회원번호와 작성자 회원번호가 일치
+			boardService.deleteReply(re_num);
+			mapJson.put("result", "success");
+		}else {
+			//로그인한 회원번호와 작성자 회원번호가 불일치
+			mapJson.put("result", "wrongAccess");
+		}
+		
+		return mapJson;
+	}
 }

@@ -16,13 +16,13 @@ import kr.spring.board.vo.BoardVO;
 @Mapper
 public interface BoardMapper {
 	//부모글
-	public List<BoardVO> selectList(Map<String, Object> map);
-	public int selectRowCount(Map<String, Object> map);
-	public void insertBoard(BoardVO board);
-	public BoardVO selectBoard(int board_num);
+	public List<BoardVO> selectList(Map<String, Object> map);				// xml
+	public int selectRowCount(Map<String, Object> map);						// xml
+	public void insertBoard(BoardVO board);									// xml
+	public BoardVO selectBoard(int board_num);								// xml
 	@Update("UPDATE spboard SET hit=hit+1 WHERE board_num=#{board_num}")
 	public void updateHit(int board_num);
-	public void updateBoard(BoardVO board);
+	public void updateBoard(BoardVO board);									//xml
 	@Delete("DELETE FROM spboard WHERE board_num=#{board_num}")
 	public void deleteBoard(int board_num);
 									//filename='' 비어있게하면 파일지움
@@ -40,12 +40,16 @@ public interface BoardMapper {
 	@Delete("DELETE FROM spboard_fav WHERE board_num=#{board_num}")
 	public void deleteFavByBoardNum(int board_num);				//부모글 지울 떄 좋아요 지워주기위해 만듦
 	//댓글
-	public List<BoardReplyVO> selectListReply(Map<String, Object> map);
+	public List<BoardReplyVO> selectListReply(Map<String, Object> map);				//xml
 	@Select("SELECT COUNT (*) FROM spboard_reply WHERE board_num=#{board_num}")
 	public int selectRowCountReply(Map<String, Object> map);
+	//댓글 수정,삭제시 작성자 회원번호 구할 때 사용
+	@Select("SELECT * FROM spboard_reply WHERE re_num=#{re_num}")
 	public BoardReplyVO selectReply(int re_num);						//한건의 데이터 불러오기
-	public void insertReply(BoardReplyVO boardReply);					//등록
+	public void insertReply(BoardReplyVO boardReply);					//데이터등록		xml
+	@Update("UPDATE spboard_reply SET re_content=#{re_content}, re_ip=#{re_ip}, re_mdate=SYSDATE WHERE re_num=#{re_num}")
 	public void updateReply(BoardReplyVO boardReply);
+	@Delete("DELETE FROM spboard_reply WHERE re_num=#{re_num}")
 	public void deleteReply(int re_num);
 	//부모글 삭제시 댓글이 존재하면 부모글 삭제전 댓글 삭제
 	@Delete("DELETE FROM spboard_reply WHERE board_num=#{board_num}")

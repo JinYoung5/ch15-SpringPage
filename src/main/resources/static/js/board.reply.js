@@ -146,13 +146,93 @@ $(function(){
 	/*-----------------------------
 	 *댓글 수정
 	 *-----------------------------*/
-	//댓글 수정 버튼 클릭시 수정폼 노출
-	
+	//댓글 수정 버튼 클릭시 수정폼 노출				없던게 만들어진 버튼이라 
+	$(document).on('click','.modify-btn',function(){
+		//댓글 번호
+		let re_num = $(this).attr('data-num');
+		//댓글 내용
+		let content = $(this).parent().find('p').html().replace(/<br>/gi,'\r\n');
+		
+		//댓글 수정폼 UI (없어서 만들어야됨)
+		let modifyUI = '<form id="mre_form">';								//문자열을 가져와야돼서 + + 로 명시
+			modifyUI += '<input type="hidden" name="re_num" id="mre_num" value="'+re_num+'">';
+			modifyUI += '<textarea rows="3" cols="50" name="re_content" id="mre_content" class="rep-content">'+content+'</textarea>';
+			modifyUI += '<div id="mre_first"><span class="letter-count">300/300</span></div>';
+			modifyUI += '<div id="mre_second" class="align-right">';
+			modifyUI += ' <input type="submit" value="수정">';
+			modifyUI += ' <input type="button" value="취소" class="re-reset">';
+			modifyUI += '</div>';
+			modifyUI += '<hr size="1" noshade width="96%">';
+			modifyUI += '</form>';
+			
+		//이전에 이미 수정하는 댓글이 있을 경우 수정버튼을 클릭하면 숨김 sub-item을 환원시키고 수정폼을 초기화 함
+		initModifyForm();
+		//지금 클릭해서 수정하고자 하는 데이터는 감추기
+		//수정 버튼을 감싸고 있는 div를 감추기		(initModifyForm이 감싸고 있기에 삭제말고 숨김처리)
+		$(this).parent().hide();
+		
+		//수정폼을 수정하고자 하는 데이터가 있는 div에 노출
+		$(this).parents('.item').append(modifyUI);
+		
+		//입력한 글자수 세팅
+		let inputLength = $('#mre_content').val().length;
+		let remain = 300 - inputLength;
+		remain += '/300';
+		
+		//문서 객체에 반영  .letter-count 앞에 공백이있음(#mre_first 후손선택자라)
+		$('#mre_first .letter-count').text(remain);
+	});
 	//수정폼에서 취소 버튼 클릭시 수정폼 초기화
-	
+	$(document).on('click','.re-reset',function(){
+		initModifyForm();
+	});
 	//댓글 수정폼 초기화
-	
+	function initModifyForm(){
+		$('.sub-item').show();
+		$('#mre_form').remove();
+	}
 	//댓글 수정
+	$(document).on('submit','#mre_form',function(event){
+		if($('#mre_content').val().trim()==''){
+			alert('내용을 입력하세요');
+			$('#mre_content').val('').focus();
+			return false;
+		}
+		//폼에 입력한 데이터 반환
+		let form_data = $(this).serialize();
+		
+		//서버와 통신
+		$.ajax({
+			url:'updateReply',
+			type:'post',
+			data:form_data,
+			dataType:'json',
+			success:function(param){
+				if(param.result=='logout'){
+					alert('로그인해야 수정할 수 있습니다.');
+				}else if(param.result == 'success'){
+					//내용 읽기
+					$('#mre_form').parent().find('p').html($('#mre_content').val().replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\r\n/g,'<br>').replace(/\r/g,'<br>').replace(/\n/g,'<br>'));
+					//최근 수정일 처리
+					$('#mre_form').parent().find('.modify-date').text('최근 수정일 : 5초미만');
+					//수정폼 초기화
+					initModifyForm();
+				}else if(param.result == 'wrongAccess'){
+					alert('타인의 글은 수정할 수 없습니다.');
+				}else{
+					alert('댓글 수정 오류');
+				}
+			},
+			error:function(){
+				alert('네트워크 오류 발생');
+			}
+		});
+		
+		
+		//기본 이벤트 제거
+		event.preventDefault();
+	});
+	
 	
 	/*-----------------------------
 	 *댓글 등록, 수정 공통
@@ -178,9 +258,39 @@ $(function(){
 		}
 	});
 	
+	
 	/*-----------------------------
 	 *댓글 삭제
 	 *-----------------------------*/
+						//클래스여서 .있어야됨
+	$(document).on('click','.delete-btn',function(){
+		//댓글 번호
+		let re_num = $(this).attr('data-num');
+		
+		//서버와 통신
+		$.ajax({
+			url:'deleteReply',
+			type:'post',
+			data:{re_num:re_num},
+			dataType:'json',
+			success:function(param){
+				if(param.result == 'logout'){
+					alert('로그인 해야 삭제할 수 있습니다.');
+				}else if(param.result == 'success'){
+					alert('삭제 완료!');
+					selectList(1);
+				}else if(param.result == 'wrongAccess'){
+					alert('타인의 글 삭제 불가능');
+				}else{
+					alert('댓글 삭제 오류 발생');
+				}
+			},
+			error:function(){
+				alert('네트워크 오류');
+			}
+		});
+	});
+	
 	
 	/*-----------------------------
 	 *댓글수 표시

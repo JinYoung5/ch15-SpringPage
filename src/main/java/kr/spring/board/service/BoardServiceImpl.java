@@ -95,8 +95,7 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public BoardReplyVO selectReply(int re_num) {
-		// TODO Auto-generated method stub
-		return null;
+		return boardMapper.selectReply(re_num);
 	}
 
 	@Override
@@ -106,14 +105,12 @@ public class BoardServiceImpl implements BoardService{
 
 	@Override
 	public void updateReply(BoardReplyVO boardReply) {
-		// TODO Auto-generated method stub
-		
+		boardMapper.updateReply(boardReply);
 	}
 
 	@Override
 	public void deleteReply(int re_num) {
-		// TODO Auto-generated method stub
-		
+		boardMapper.deleteReply(re_num);
 	}
 
 }

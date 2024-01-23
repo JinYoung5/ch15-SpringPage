@@ -377,6 +377,11 @@ div#re_first,div#mre_first{
 	padding-left: 15px;
 	margin-bottom: 10px;
 }
+div#re_second, div#mre_second{
+	float: left;
+	width: 19%;
+	margin-bottom: 10px;
+}
 div#loading{
 	width: 100px;
 	height: 50px;
