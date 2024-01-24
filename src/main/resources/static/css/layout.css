@@ -407,3 +407,44 @@ form#mre_form{
 	border: none;
 	margin: 5px;
 }
+
+
+/*	게시판 글 상세
+--------------------------- */
+#talk_member{
+	margin-top: 15px;
+	padding: 10px;
+}
+.member-span{
+	background-color: #CCC;
+	border-radius: 15px;
+	padding: 7px;
+	margin: 20px;
+	cursor: pointer;
+	display: inline-block;
+	min-width: 60px;
+}
+.member-span > sup{
+	border-radius: 50%;
+	display: inline-block;
+	width: 25px;
+	height: 10px;
+	text-align: center;
+	padding-bottom: 15px;
+	margin-left: 5px;
+	background-color: #FFF;
+}
+ul#search_area{
+	padding: 0;
+	width: 360px;
+	margin-left: 110px;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	position: absolute;
+	background-color: #FFF;
+}
+ul#search_area li{
+	padding: 8px;
+	cursor: pointer;
+	border-bottom: 1px solid black;
+}

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE tiles-definitions PUBLIC
+       "-//Apache Software Foundation//DTD Tiles Configuration 3.0//EN"
+       "http://tiles.apache.org/dtds/tiles-config_3_0.dtd">
+
+<tiles-definitions>
+
+    <definition name="talkList" extends="myPage">
+    	<put-attribute name="title" value="채팅리스트" />
+    	<put-attribute name="body" value="/WEB-INF/views/talk/talkList.jsp" />
+    </definition>
+    <definition name="talkRoomWrite" extends="myPage">
+    	<put-attribute name="title" value="채팅방 생성" />
+    	<put-attribute name="body" value="/WEB-INF/views/talk/talkRoomWrite.jsp" />
+    </definition>
+    
+</tiles-definitions>
+
+
