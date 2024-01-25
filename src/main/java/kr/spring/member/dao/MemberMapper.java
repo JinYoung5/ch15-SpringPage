@@ -19,7 +19,7 @@ public interface MemberMapper {
 	public void insertMember_detail(MemberVO member);	//길어서 xml에 표기
 	public MemberVO selectCheckMember(String id);		//길어서 xml에 표기
 	@Select("SELECT * FROM spmember JOIN spmember_detail USING(mem_num) WHERE mem_num=#{mem_num}")
-	public MemberVO selelctMember(int mem_num);			//한 건의 데이터 불러오기
+	public MemberVO selectMember(int mem_num);			//한 건의 데이터 불러오기
 	public void updateMember(MemberVO member);
 	public void updateMember_detail(MemberVO member);
 	public void updatePassword(MemberVO member);

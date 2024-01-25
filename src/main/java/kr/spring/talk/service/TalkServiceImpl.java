@@ -18,20 +18,30 @@ public class TalkServiceImpl implements TalkService{
 	
 	@Override
 	public List<TalkRoomVO> selectTalkRoomList(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return null;
+		return talkMapper.selectTalkRoomList(map);
 	}
 
 	@Override
 	public int selectRowCount(Map<String, Object> map) {
-		// TODO Auto-generated method stub
-		return 0;
+		return talkMapper.selectRowCount(map);
 	}
 
 	@Override
 	public void insertTalkRoom(TalkRoomVO talkRoomVO) {
-		// TODO Auto-generated method stub
+		//기본키 생성
+		talkRoomVO.setTalkroom_num(talkMapper.selectTalkRoomNum());
+		//채팅방 생성
+		talkMapper.insertTalkRoom(talkRoomVO);
 		
+		//입장 메세지 처리
+		talkRoomVO.getTalkVO().setTalk_num(talkMapper.selectTalkNum());
+		talkRoomVO.getTalkVO().setTalkroom_num(talkRoomVO.getTalkroom_num());
+		talkMapper.insertTalk(talkRoomVO.getTalkVO());
+		
+		//채팅방 멤버 생성
+		for(int mem_num : talkRoomVO.getMembers()) {
+			talkMapper.insertTalkRoomMember(talkRoomVO.getTalkroom_num(), talkRoomVO.getBasic_name(), mem_num);
+		}
 	}
 
 	@Override

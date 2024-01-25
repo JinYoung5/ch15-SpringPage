@@ -29,11 +29,6 @@ public class MemberServiceImpl implements MemberService{
 	}
 
 	@Override
-	public MemberVO selelctMember(int mem_num) {
-		return memberMapper.selelctMember(mem_num);
-	}
-
-	@Override
 	public void updateMember(MemberVO member) {
 		// TODO Auto-generated method stub
 		
@@ -77,5 +72,10 @@ public class MemberServiceImpl implements MemberService{
 	@Override
 	public List<MemberVO> selectSearchMember(String id) {
 		return memberMapper.selectSearchMember(id);
+	}
+
+	@Override
+	public MemberVO selectMember(int mem_num) {
+		return memberMapper.selectMember(mem_num);
 	}
 }

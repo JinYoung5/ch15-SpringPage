@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -17,6 +18,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import kr.spring.member.service.MemberService;
 import kr.spring.member.vo.MemberVO;
 import kr.spring.talk.service.TalkService;
+import kr.spring.talk.vo.TalkRoomVO;
+import kr.spring.talk.vo.TalkVO;
+import kr.spring.util.PageUtil;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -33,6 +37,27 @@ public class TalkController {
 	@RequestMapping("/talk/talkList")
 	public String chatList(@RequestParam(value="pageNum",defaultValue="1") int currentPage, String keyword, HttpSession session, Model model) {
 		
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		
+		Map<String, Object> map = new HashMap<String, Object>();
+		map.put("keyword", keyword);
+		map.put("mem_num", user.getMem_num());
+		
+		int count = talkService.selectRowCount(map);
+		
+		PageUtil page = new PageUtil(null, keyword, currentPage,count,30,10,"talkList");
+		
+		List<TalkRoomVO> list = null;
+		if(count>0) {
+			map.put("start", page.getStartRow());
+			map.put("end", page.getEndRow());
+			list = talkService.selectTalkRoomList(map);
+		}
+		model.addAttribute("count", count);
+		model.addAttribute("list", list);
+		model.addAttribute("page", page.getPage());
+		
+		
 		return "talkList";
 	}
 	
@@ -47,6 +72,23 @@ public class TalkController {
 		return "talkRoomWrite";
 	}
 	//전송된 데이터 처리
+	@PostMapping("/talk/talkRoomWrite")		//TalkVO가 필요해서 이동해서 작성
+	public String talkRoomSubmit(TalkRoomVO vo, HttpSession session) {
+		log.debug("<<채팅방 생성 TalkRoomVO>> : " + vo);
+		
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		
+		//채팅 멤버 초대 문구 설정
+		vo.setTalkVO(new TalkVO());
+		vo.getTalkVO().setMem_num(user.getMem_num());										//일반인이 채팅에 쓰지않을 메세지명시 @{member}@
+		vo.getTalkVO().setMessage(user.getId()+"님이 "+findMemberId(vo,user)+"님을 초대하였습니다.@{member}@");
+		
+		talkService.insertTalkRoom(vo);
+		
+		return "redirect:/talk/talkList";
+	}
+
+	
 	
 	//채팅 회원 검색
 	@RequestMapping("/talk/memberSearchAjax")
@@ -72,4 +114,24 @@ public class TalkController {
 	/*=======================
 	 * 채팅 메세지 처리
 	 *=======================*/
+	
+	
+	/*=======================
+	 * 초대한 회원의 id 구하기
+	 *=======================*/
+	private String findMemberId(TalkRoomVO vo, MemberVO user) {
+		String member_id ="";
+		int[] members = vo.getMembers();
+		for(int i=0; i<members.length; i++) {
+			String temp_id = memberService.selectMember(members[i]).getId();
+			//초대한 사람의 아이디는 제외
+			if(!user.getId().equals(temp_id)) {
+				member_id += temp_id;
+				if(i < members.length-1) member_id += ", ";
+			}
+		}
+				
+		return member_id;
+	}
+	
 }

@@ -148,7 +148,7 @@ public class MemberController {
 		MemberVO user = (MemberVO)session.getAttribute("user");
 		log.debug("<<mem_num>>");
 		//회원 정보
-		MemberVO member = memberService.selelctMember(user.getMem_num());
+		MemberVO member = memberService.selectMember(user.getMem_num());
 		
 		log.debug("<<회원 상세 정보>> : " + member);
 		
@@ -169,7 +169,7 @@ public class MemberController {
 		if(user == null ) {	//로그인이 되지 않은 경우
 			getBasicProfileImage(request, model);
 		}else {	//로그인 된 경우
-			MemberVO memberVO = memberService.selelctMember(user.getMem_num());
+			MemberVO memberVO = memberService.selectMember(user.getMem_num());
 			viewProfile(memberVO, request, model);
 		}
 		//빈의 이름이 imageView인 ImageView 객체 호출
@@ -179,7 +179,7 @@ public class MemberController {
 	@RequestMapping("/member/viewProfile")
 	public String getProfileByMem_num(@RequestParam int mem_num, HttpServletRequest request, Model model) {
 
-		MemberVO memberVO = memberService.selelctMember(mem_num);
+		MemberVO memberVO = memberService.selectMember(mem_num);
 		
 		viewProfile(memberVO, request, model);
 		

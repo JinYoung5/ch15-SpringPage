@@ -40,9 +40,9 @@ $(function(){
 				}else if(param.result == 'success'){
 					$('#search_area').empty();
 					$(param.member).each(function(index,item){
-						//채팅방 개설자의 아이디와 동일한 아이디 체크
+						//채팅방 개설자의 아이디와 동일한 아이디 체크, 이미 member_list에 저장된 아이디는 제외
 						if(!member_list.includes(item.id)){
-							//채팅방 개설자의 아이디와 같지 않은 아이디만 표시
+							//채팅방 개설자의 아이디와 같지 않은 아이디, 이미 등록된 아이디는 제외
 							let output = '';
 							output += '<li data-num="'+item.mem_num+'">';
 							output += item.id;
@@ -80,6 +80,23 @@ $(function(){
 		}			
 	});
 	
+	//선택한 채팅방 멤버 삭제하기
+	$(document).on('click','.member-span',function(){
+		let id = $(this).attr('data-id');
+		//채팅 멤버가 저장된 배열에서 삭제할 멤버의 id를 제거
+		member_list.splice(member_list.indexOf(id),1);
+		$(this).remove();	//span태그 제거(this가 span)
+		
+		if($('#name_checked').is(':checked')){	//채팅방 이름 자동 설정
+			makeRoom_name();
+		}
+		
+		if($('#talk_member span').length == 0){	//채팅멤버가 없어도 채팅방 개설자가 남아있기에 초기화 작업
+			$('#name_span').text('');
+			$('#basic_name').val('');
+		}
+	});
+	
 	//채팅방 이름 생성 방식 정하기(자동/수동)
 	$('#name_checked').click(function(){
 		if($('#name_checked').is(':checked')){	//채팅방 이름 자동 생성
@@ -107,6 +124,15 @@ $(function(){
 		$('#basic_name').val(name);
 		$('#name_span').text(name);
 	}
+	//채팅방 생성 전송
+	$('#talk_form').submit(function(){
+		if(member_list.length<=1){
+			//이미 배열에 로그인한 유저(채팅방 개설자)가 기본 등록되어 있어서 로그인한 유저 포함 최소 2명이 되어야 채팅가능
+			alert('채팅에 참여할 회원을 검색하세요');
+			$('#member_search').focus();
+			return false;
+		}
+	});
 
 	/*------------------------
 	 *	채팅하기
