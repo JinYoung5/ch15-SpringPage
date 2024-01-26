@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import kr.spring.member.service.MemberService;
 import kr.spring.member.vo.MemberVO;
 import kr.spring.talk.service.TalkService;
+import kr.spring.talk.vo.TalkMemberVO;
 import kr.spring.talk.vo.TalkRoomVO;
 import kr.spring.talk.vo.TalkVO;
 import kr.spring.util.PageUtil;
@@ -114,6 +115,37 @@ public class TalkController {
 	/*=======================
 	 * 채팅 메세지 처리
 	 *=======================*/
+	//채팅 메세지 페이지 호출
+	@RequestMapping("/talk/talkDetail")
+	public String talkDetail(@RequestParam int talkroom_num, Model model, HttpSession session) {
+		
+		String chatMember = "";
+		String room_name = "";
+		
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		
+		List<TalkMemberVO> list = talkService.selectTalkMember(talkroom_num);
+		
+		for(int i=0; i<list.size(); i++) {
+			TalkMemberVO vo = list.get(i);
+			//로그인한 회원의 채팅방 이름 세팅
+			if(user.getMem_num() == vo.getMem_num()) {
+				room_name = vo.getRoom_name();
+			}
+			//채팅 멤버 저장
+			if(i>0) chatMember += ",";
+			chatMember += list.get(i).getId();
+		}
+		
+		//채팅 멤버 id저장
+		model.addAttribute("chatMembe", chatMember);
+		//채팅 멤버수						채팅 멤버명수확인
+		model.addAttribute("chatCount", list.size());
+		//로그인한 회원의 채팅방 이름
+		model.addAttribute("room_name", room_name);
+		
+		return "talkDetail";
+	}
 	
 	
 	/*=======================

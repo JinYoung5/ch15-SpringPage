@@ -6,7 +6,7 @@
 <div id="talkWrite" class="page-main">
 	<h2>채팅방 생성</h2>
 	<form action="talkRoomWrite" method="post" id="talk_form">
-		<input type="hidden" name="memebers" id="user" data-id="${user.id}" value="${user.mem_num}">
+		<input type="hidden" name="members" id="user" data-id="${user.id}" value="${user.mem_num}">
 		<ul>
 			<li>
 				<label for="basic_name">채팅방 이름</label>

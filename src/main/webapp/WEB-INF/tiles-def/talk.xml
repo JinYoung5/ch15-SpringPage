@@ -14,6 +14,10 @@
     	<put-attribute name="title" value="채팅방 생성" />
     	<put-attribute name="body" value="/WEB-INF/views/talk/talkRoomWrite.jsp" />
     </definition>
+    <definition name="talkDetail" extends="myPage">
+    	<put-attribute name="title" value="채팅하기" />
+    	<put-attribute name="body" value="/WEB-INF/views/talk/talkDetail.jsp" />
+    </definition>
     
 </tiles-definitions>
 

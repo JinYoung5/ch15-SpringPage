@@ -9,8 +9,8 @@
 	</resultMap>	
 	
 	<sql id="talkSub">
-		FROM sptalkroom r JOIN sptalk_member m USING(talkroom_num)
-		LEFT OUTER JOIN (SELECT				<!-- 누락되지않게 LEFT OUTER JOIN -->
+		FROM sptalkroom JOIN sptalk_member m USING(talkroom_num)
+		LEFT OUTER JOIN (SELECT				/* 누락되지않게 LEFT OUTER JOIN */
 							talkroom_num,
 							mem_num,
 							COUNT(*) room_cnt
@@ -32,14 +32,13 @@
 		WHERE m.mem_num=#{mem_num}
 		<if test="keyword != null and keyword != ''">
 			AND room_name LIKE '%' || #{keyword} || '%'
-		</if>
-						
+		</if>		
 	</sql>
 	
 	<select id="selectRowCount" parameterType="map" resultType="integer">
 		SELECT
 			COUNT(*)
-		FROM sptalkroom
+		<include refid="talkSub"></include>
 	</select>
 	
 	<select id="selectTalkRoomList" parameterType="map" resultMap="talkMap">
@@ -50,11 +49,47 @@
 				rownum rnum
 			FROM (SELECT
 					*
-				FROM sptalkroom
-				ORDER BY talkroom_num DESC)a)
+				<include refid="talkSub"></include>
+				ORDER BY chat_date DESC)a)				/* 날짜 최신순으로 정렬 */
 		<![CDATA[
 		WHERE rnum >= #{start} AND rnum <= #{end}
 		]]>
+	</select>
+	
+	<!-- 채팅 멤버 읽기 -->
+	<select id="selectTalkMember" parameterType="integer" resultType="talkMemberVO">
+		SELECT
+			mem_num,
+			id,
+			room_name
+		FROM sptalk_member JOIN spmember
+		USING(mem_num)
+		WHERE talkroom_num=#{talkroom_num}
+	</select>
+	
+	<!-- 채팅 메세지 읽기 -->
+	<select id=" selectTalkDetail" parameterType="integer" resultType="talkVO">
+		SELECT
+			<![CDATA[
+			REPLACE(REPLACE(message,'<','&lt;'),'>','&gt;') message,
+			]]>
+			chat_date,
+			read_count,
+			mem_num,
+			id
+		FROM sptalk 
+		LEFT OUTER JOIN (SELECT
+							talk_num,
+							COUNT(*) read_count
+							FROM sptalk_read
+							GROUP BY talk_num) USING(talk_num)
+		JOIN spmember USING(mem_num)
+		WHERE talkroom_num=#{talkroom_num} AND chat_date >= (SELECT 
+																member_date
+															FROM sptalk_member
+															WHERE talkroom_num=#{talkroom_num}
+															AND mem_num=#{mem_num}) /* 멤버 등록일 이후의 정보만 읽어옴 */
+		ORDER BY chat_date ASC
 	</select>
 	
 </mapper>
