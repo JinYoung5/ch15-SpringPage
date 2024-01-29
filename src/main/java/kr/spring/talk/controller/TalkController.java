@@ -138,13 +138,35 @@ public class TalkController {
 		}
 		
 		//채팅 멤버 id저장
-		model.addAttribute("chatMembe", chatMember);
+		model.addAttribute("chatMember", chatMember);
 		//채팅 멤버수						채팅 멤버명수확인
 		model.addAttribute("chatCount", list.size());
 		//로그인한 회원의 채팅방 이름
 		model.addAttribute("room_name", room_name);
 		
 		return "talkDetail";
+	}
+	//채팅 메세지 읽기 (ajax처리)
+	@RequestMapping("/talk/talkDetailAjax")
+	@ResponseBody
+	public Map<String, Object> talkDeatilAjax(@RequestParam int talkroom_num, HttpSession session){
+		Map<String, Object> mapAjax = new HashMap<String, Object>();
+		
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		if(user == null) {	//로그인이 되지 않은 경우
+			mapAjax.put("result", "logout");
+		}else {	//로그인이 된 경우
+			Map<String, Integer> map = new HashMap<String, Integer>();
+			map.put("talkroom_num", talkroom_num);
+			map.put("mem_num", user.getMem_num());
+			List<TalkVO> list = talkService.selectTalkDetail(map);
+			
+			mapAjax.put("result", "success");
+			mapAjax.put("list", list);
+			mapAjax.put("user_num", user.getMem_num());
+		}
+		
+		return mapAjax;
 	}
 	
 	

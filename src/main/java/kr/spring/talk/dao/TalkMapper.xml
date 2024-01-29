@@ -68,7 +68,7 @@
 	</select>
 	
 	<!-- 채팅 메세지 읽기 -->
-	<select id=" selectTalkDetail" parameterType="integer" resultType="talkVO">
+	<select id="selectTalkDetail" parameterType="integer" resultType="talkVO">
 		SELECT
 			<![CDATA[
 			REPLACE(REPLACE(message,'<','&lt;'),'>','&gt;') message,

@@ -448,3 +448,77 @@ ul#search_area li{
 	cursor: pointer;
 	border-bottom: 1px solid black;
 }
+
+
+/*	채팅하기
+--------------------------- */
+#chatting_message{
+	border: 1px solid black;
+	width: 660px;
+	height: 300px;
+	margin: 0 auto;
+	padding: 10px;
+	overflow: auto;					/* 넘치면 스크롤 처리 */
+}
+.date-position{
+	text-align: center;
+}
+.date-position span{
+	display: inline-block;
+	width: 300px;
+	height: 20px;
+	border-radius: 10px;
+	background-color: #f2efef;
+}
+.from-position{
+	width: 300px;
+	margin: 10px 0 10px 33px;
+}
+.from-position .item{
+	background-color: yellow;
+	padding: 10px;
+	min-height: 50px;
+	border-radius: 20px;
+	border-top-right-radius: 0;
+}
+.to-position{
+	width: 300px;
+	margin: 10px 0 10px 0;
+}
+.to-position .item{
+	background-color: pink;
+	padding: 10px;
+	min-height: 50px;
+	border-radius: 20px;
+	border-top-left-radius: 0;
+}
+.to-position div.space-photo{
+	float: left;
+	width: 15%;
+}
+.to-position div.space-clear{
+	clear: both;
+}
+.member-message{
+	width: 230px;
+	min-height: 24px;
+	border-radius: 10px;
+	background-color: #eee;
+	margin: 10px auto;
+	text-align: center;
+	padding: 8px 4px;
+	clear: both;
+}
+form#detail_form{
+	width: 660px;
+}
+#message{
+	width: 578px;
+}
+#message_btn{
+	margin-top: -20px;
+	padding-left: 40px;
+}
+#message_btn input{
+	width: 584px;
+}
