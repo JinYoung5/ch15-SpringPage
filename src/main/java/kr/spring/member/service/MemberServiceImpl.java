@@ -48,8 +48,7 @@ public class MemberServiceImpl implements MemberService{
 
 	@Override
 	public void updateAu_id(String au_id, int mem_num) {
-		// TODO Auto-generated method stub
-		
+		memberMapper.updateAu_id(au_id, mem_num);
 	}
 
 	@Override

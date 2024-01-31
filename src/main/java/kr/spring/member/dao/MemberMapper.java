@@ -26,6 +26,7 @@ public interface MemberMapper {
 	public void deleteMember(int mem_num);
 	public void deleteMember_detail(int mem_num);
 	//자동 로그인
+	@Update("UPDATE spmember_detail SET au_id=#{au_id} WHERE mem_num=#{mem_num}")
 	public void updateAu_id(String au_id, int mem_num);
 	public void selectAu_id(String au_id);
 	public void deleteAu_id(int mem_num);

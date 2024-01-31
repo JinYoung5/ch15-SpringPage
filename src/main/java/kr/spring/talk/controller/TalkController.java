@@ -108,7 +108,6 @@ public class TalkController {
 			
 		}
 		
-		
 		return mapJson;
 	}
 	
@@ -188,6 +187,27 @@ public class TalkController {
 			mapAjax.put("result", "success");
 		}
 				
+		return mapAjax;
+	}
+	
+	
+	/*=======================
+	 * 채팅방 생성
+	 *=======================*/
+	@RequestMapping("/talk/changeName")
+	@ResponseBody
+	public Map<String, String> changeName(TalkMemberVO vo, HttpSession session){
+		Map<String, String> mapAjax = new HashMap<String, String>();
+		
+		MemberVO user = (MemberVO)session.getAttribute("user");
+		if(user==null) {	//로그인이 되지 않은  경우
+			mapAjax.put("result", "logout");
+		}else {	//로그인이 된 경우
+			vo.setMem_num(user.getMem_num());
+			talkService.changeRoomName(vo);
+			mapAjax.put("result", "success");
+		}
+		
 		return mapAjax;
 	}
 	

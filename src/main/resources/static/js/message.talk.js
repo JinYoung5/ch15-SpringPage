@@ -28,7 +28,7 @@ $(function(){
 		};
 		//서버로부터 메세지를 받으면 호출되는 함수 지정
 		message_socket.onmessage=function(evt){
-			let data = evet.data;
+			let data = evt.data;
 			if($('#talkDetail').length == 1 && data.substring(0,4) == 'msg:'){
 				selectMsg();
 			}
@@ -279,4 +279,63 @@ $(function(){
 		//기본 이벤트 제거
 		event.preventDefault();
 	});
+	
+	/*------------------------
+	 *	채팅방 이름 변경하기
+	 *------------------------*/
+	//채팅방 이름 변경 UI 표시
+	$('#change_name').click(function(){
+		$(this).hide();
+		let output = '<div id="space_name">';
+		output += '<input type="text" name="room_name" id="room_name">'
+		output += '<input type="button" value="전송" id="submit_name">'
+		output += '<input type="button" value="취소" id="result_name">'
+		output += '</div>';
+	$('#chatroom_title').append(output);
+	});
+	
+	//채팅방 이름 변경 UI 숨기기
+	$(document).on('click','#result_name',function(){
+		initForm();
+	});
+	
+	//채팅방 이름 변경 UI 초기화
+	function initForm(){
+		$('#change_name').show();
+		$('#space_name').remove();
+	}
+	
+	//채팅방 이름 변경하기
+	$(document).on('click','#submit_name',function(){
+		if($('#room_name').val().trim()==''){
+			alert('채팅방 이름을 입력하세요');
+			$('#room_name').val('').focus();
+			return;
+		}
+		//서버와 통신
+		$.ajax({
+			url:'../talk/changeName',
+			type:'post',
+			data:{talkroom_num:$('#talkroom_num').val(),room_name:$('#room_name').val()},
+			dataType:'json',
+			success:function(param){
+				if(param.result == 'logout'){
+					alert('로그인해야 작성할 수 있습니다.');
+					message_socket.close();
+				}else if(param.result == 'success'){
+					$('#chatroom_name').text($('#room_name').val());
+					//입력 창 초기화
+					initForm();
+				}else{
+					alert('채팅방 이름 변경 오류 발생');
+					message_socket.close();
+				}
+			},
+			error:function(){
+				alert('네트워크 오류!');
+				message_socket.close();
+			}
+		});
+	});
 });
+
