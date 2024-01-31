@@ -472,7 +472,7 @@ ul#search_area li{
 }
 .from-position{
 	width: 300px;
-	margin: 10px 0 10px 33px;
+	margin: 10px 0 10px 330px;
 }
 .from-position .item{
 	background-color: yellow;
@@ -495,6 +495,10 @@ ul#search_area li{
 .to-position div.space-photo{
 	float: left;
 	width: 15%;
+}
+.to-position div.space-message{
+	float: left;
+	width: 85%;
 }
 .to-position div.space-clear{
 	clear: both;

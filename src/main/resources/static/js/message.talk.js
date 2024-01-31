@@ -11,12 +11,33 @@ $(function(){
 		member_list = [$('#user').attr('data-id')];
 	}else if($('#talkDetail').length>0){	//채팅 페이지
 		//웹소켓 연결 후 코드 입력
+		connectWebSocket();	//웹소켓 생성
+		member_list = $('#chat_member').text().split(',');
 	}
 
 	/*------------------------
 	 *	웹 소켓 연결(맨 마지막)
 	 *------------------------*/
-
+	function connectWebSocket(){
+		message_socket = new WebSocket("ws://localhost:8000/message-ws");
+		message_socket.onopen=function(evt){
+			console.log("채팅페이지 접속 : " + $('#talkDetail').length);
+			if($('#talkDetail').length == 1){
+				message_socket.send("msg:");			//초기데이터 호출
+			}
+		};
+		//서버로부터 메세지를 받으면 호출되는 함수 지정
+		message_socket.onmessage=function(evt){
+			let data = evet.data;
+			if($('#talkDetail').length == 1 && data.substring(0,4) == 'msg:'){
+				selectMsg();
+			}
+		};
+		message_socket.onclose=function(evt){
+			//소켓이 종료된 후 부과적인 작업이 있을 경우 명시
+			consol.log('chat close');
+		}
+	}
 
 	/*------------------------
 	 *	채팅방 생성
@@ -148,6 +169,7 @@ $(function(){
 			success:function(param){
 				if(param.result == 'logout'){
 					alert('로그인 후 사용하세요!');
+					message_socket.close();
 				}else if(param.result == 'success'){
 					//메세지 표시 UI 초기화
 					$('#chatting_message').empty();
@@ -178,8 +200,8 @@ $(function(){
 								output += '</div><div class="space-message">';
 								output += item.id;
 							}
-							output += '<div class="item">';
-							output += item.read_count + '<span>' + item.message + '</span>';
+							output += '<div class="item">';						//줄바꿈 처리
+							output += item.read_count + '<span>' + item.message.replace(/\r\n/g,'<br>').replace(/\r/g,'<br>').replace(/\n/g,'<br>') + '</span>';
 							//시간 추출
 							output += '<div class="align-right">' + item.chat_date.split(' ')[1]+'</div>';
 							output += '</div>';
@@ -195,15 +217,66 @@ $(function(){
 					});
 				}else{
 					alert('채팅 메세지 읽기 오류 발생');
+					message_socket.close();
 				}
 			},
 			error:function(){
 				alert('네트워크 오류 발생');
+				message_socket.close();
 			}
 		});
 	}
 	
-	//초기 데이터 호출
-	selectMsg();
+	//메세지 입력 후 enter 이벤트 처리
+	$('#message').keydown(function(event){
+		if(event.keyCode == 13 && !event.shiftKey){
+			$('#detail_form').trigger('submit');			//trigger()-> 강제발생시킴
+		}
+	});
 	
+	//채팅 메세지 등록
+	$('#detail_form').submit(function(event){
+		if($('#message').val().trim()==''){
+			alert('메세지를 입력하세요');
+			$('#message').val('').focus();
+			return false;
+		}
+		
+		if($('#message').val().length>1333){
+			alert('메세지를 1333자까지만 입력 가능합니다.');
+			return false;									//기본 이벤트, submit인 경우 return false .. button등은 return을 해줘야됨 
+		}
+		
+		//form 이하의 태그에 입력한 데이터를 모두 읽어옴
+		let form_data = $(this).serialize();
+		
+		
+		//서버와 통신
+		$.ajax({
+			url:'../talk/writeTalk',
+			type:'post',
+			data:form_data,
+			dataType:'json',
+			success:function(param){
+				if(param.result == 'logout'){
+					alert('로그인해야 작성할 수 있습니다.');
+					message_socket.close();
+				}else if(param.result == 'success'){
+					//폼 초기화
+					$('#message').val('').focus();
+					//메세지가 저장되었다고 소켓에 신호를 보냄
+					message_socket.send('msg:');
+				}else{
+					alert('채팅 메세지 등록 오류');
+					message_socket.close();
+				}
+			},
+			error:function(){
+				alert('네트워크 오류');
+				message_socket.close();
+			}
+		});
+		//기본 이벤트 제거
+		event.preventDefault();
+	});
 });

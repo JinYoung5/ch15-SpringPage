@@ -7,12 +7,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesConfigurer;
 import org.springframework.web.servlet.view.tiles3.TilesView;
 import org.springframework.web.servlet.view.tiles3.TilesViewResolver;
+import org.springframework.web.socket.config.annotation.EnableWebSocket;
+import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
+import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
 import kr.spring.interceptor.LoginCheckInterceptor;
+import kr.spring.websocket.SocketHandler;
 
 //자바코드 기반 설정 클래스
 @Configuration
-public class AppConfig implements WebMvcConfigurer{
+@EnableWebSocket
+public class AppConfig implements WebMvcConfigurer, WebSocketConfigurer{
 	//생성한다음 가져다가 쓸 수 있게 변수 생성
 	private LoginCheckInterceptor loginCheck;
 	
@@ -57,6 +62,13 @@ public class AppConfig implements WebMvcConfigurer{
 		tilesViewResolver.setViewClass(TilesView.class);
 		
 		return tilesViewResolver;
+	}
+
+	//웹소켓 세팅
+	@Override
+	public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
+																	//허용 도메인 지정
+		registry.addHandler(new SocketHandler(), "message-ws").setAllowedOrigins("*");
 	}
 }
 
