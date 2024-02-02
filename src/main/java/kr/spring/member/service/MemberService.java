@@ -15,7 +15,7 @@ public interface MemberService {
 	public void deleteMember(int mem_num);
 	//자동 로그인
 	public void updateAu_id(String au_id, int mem_num);
-	public void selectAu_id(String au_id);
+	public MemberVO selectAu_id(String au_id);
 	public void deleteAu_id(int mem_num);
 	//프로필 이미지 업데이트
 	public void updateProfile(MemberVO member);

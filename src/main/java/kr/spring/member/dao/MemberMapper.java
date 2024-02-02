@@ -28,7 +28,8 @@ public interface MemberMapper {
 	//자동 로그인
 	@Update("UPDATE spmember_detail SET au_id=#{au_id} WHERE mem_num=#{mem_num}")
 	public void updateAu_id(String au_id, int mem_num);
-	public void selectAu_id(String au_id);
+	@Select("SELECT mem_num,id,auth,au_id,passwd,nick_name,email FROM spmember JOIN spmember_detail USING(mem_num) WHERE au_id=#{au_id}")
+	public MemberVO selectAu_id(String au_id);
 	public void deleteAu_id(int mem_num);
 	//프로필 이미지 업데이트
 	@Update("UPDATE spmember_detail SET photo=#{photo},photo_name=#{photo_name} WHERE mem_num=#{mem_num}")

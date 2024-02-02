@@ -11,6 +11,7 @@ import org.springframework.web.socket.config.annotation.EnableWebSocket;
 import org.springframework.web.socket.config.annotation.WebSocketConfigurer;
 import org.springframework.web.socket.config.annotation.WebSocketHandlerRegistry;
 
+import kr.spring.interceptor.AutoLoginCheckInterceptor;
 import kr.spring.interceptor.LoginCheckInterceptor;
 import kr.spring.websocket.SocketHandler;
 
@@ -18,8 +19,16 @@ import kr.spring.websocket.SocketHandler;
 @Configuration
 @EnableWebSocket
 public class AppConfig implements WebMvcConfigurer, WebSocketConfigurer{
+	private AutoLoginCheckInterceptor autoLoginCheck;
 	//생성한다음 가져다가 쓸 수 있게 변수 생성
 	private LoginCheckInterceptor loginCheck;
+	
+	@Bean
+	public AutoLoginCheckInterceptor interceptor() {
+		autoLoginCheck = new AutoLoginCheckInterceptor();
+		return autoLoginCheck;
+	}
+	
 	
 	@Bean
 	public LoginCheckInterceptor interceptor2() {
@@ -30,6 +39,12 @@ public class AppConfig implements WebMvcConfigurer, WebSocketConfigurer{
 	
 	@Override
 	public void addInterceptors(InterceptorRegistry registry) {
+		//AutoLoginCheckInterceptor 설정
+		registry.addInterceptor(autoLoginCheck)
+				.addPathPatterns("/**")
+				.excludePathPatterns("/member/login")
+				.excludePathPatterns("/member/logout");
+		
 		//LoginCheckInterceptor 설정		Controller에 설정해야될 거를 appconfig에 명시해서 편리하게함(로그인했는지 안했는지 체크)
 		registry.addInterceptor(loginCheck)
 				.addPathPatterns("/member/myPage")
